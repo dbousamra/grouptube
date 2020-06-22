@@ -1,16 +1,24 @@
-import { Button, Heading, Pane } from 'evergreen-ui';
 import React from 'react';
+import { Landing } from './pages/Landing';
+import { Room } from './pages/Room';
+import useSocket from 'use-socket.io-client';
+import { BrowserRouter as Router, Switch, Route } from 'react-router-dom';
 
 export const App = () => {
+  const [socket] = useSocket('ws://localhost:3000', {
+    autoConnect: true,
+  });
+
   return (
-    <Pane display="flex" padding={16} background="tint2" borderRadius={3}>
-      <Pane flex={1} alignItems="center" display="flex">
-        <Heading size={600}>Left Aligned</Heading>
-      </Pane>
-      <Pane>
-        <Button marginRight={16}>Button</Button>
-        <Button appearance="primary">Primary Button</Button>
-      </Pane>
-    </Pane>
+    <Router>
+      <Switch>
+        <Route exact path="/">
+          <Landing />
+        </Route>
+        <Route exact path="/rooms/:roomId">
+          <Room socket={socket} />
+        </Route>
+      </Switch>
+    </Router>
   );
 };
